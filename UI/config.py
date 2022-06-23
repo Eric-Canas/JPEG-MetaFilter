@@ -16,4 +16,6 @@ CLOSE_META_TAG = b"</x:xmpmeta>"
 FIRST_LI_OPEN = b"<rdf:li>"
 FIRST_LI_CLOSE = b"</rdf:li>"
 
-LOGO = os.path.join("UI", "JPEG-MetaFilter-logo.ico")
+LOGO_PATH = os.path.join("UI", "JPEG-MetaFilter-logo.ico")
+if not os.path.isfile(LOGO_PATH):
+    LOGO_PATH = os.path.join("..", LOGO_PATH)

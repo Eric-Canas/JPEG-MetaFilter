@@ -15,7 +15,7 @@ class GUI(QtWidgets.QMainWindow):
         self.setWindowTitle(WINDOW_TITLE)
         self.setGeometry(100, 100, 10, 10)  # Minimal size
         # Setu the Icon
-        self.setWindowIcon(QtGui.QIcon(os.path.join("UI", "icon.png")))
+        self.setWindowIcon(QtGui.QIcon(LOGO_PATH))
 
         central_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(central_widget)
