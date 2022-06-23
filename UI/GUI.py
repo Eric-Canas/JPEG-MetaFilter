@@ -5,7 +5,6 @@ from UI.config import *
 import shutil
 import random
 
-
 class GUI(QtWidgets.QMainWindow):
     def __init__(self):
         super(GUI, self).__init__()
@@ -15,6 +14,8 @@ class GUI(QtWidgets.QMainWindow):
         # Show a dialog box
         self.setWindowTitle(WINDOW_TITLE)
         self.setGeometry(100, 100, 10, 10)  # Minimal size
+        # Setu the Icon
+        self.setWindowIcon(QtGui.QIcon(os.path.join("UI", "icon.png")))
 
         central_widget = QtWidgets.QWidget(self)
         self.setCentralWidget(central_widget)
@@ -69,8 +70,8 @@ class GUI(QtWidgets.QMainWindow):
             self.layout.addWidget(checkbox, i // grid_shape + 1, i % grid_shape)
 
         # Add the search buttons
-        self.layout.addWidget(self.search_button_any, grid_shape, 0, 1, grid_shape)
-        self.layout.addWidget(self.search_button_all, grid_shape + 1, 0, 1, grid_shape)
+        self.layout.addWidget(self.search_button_any, len(self.checkboxes)//grid_shape + 2, 0, 1, grid_shape)
+        self.layout.addWidget(self.search_button_all, len(self.checkboxes)//grid_shape + 3, 0, 1, grid_shape)
 
     def delete_checkboxes(self) -> None:
         for checkbox in self.checkboxes.values():
@@ -103,3 +104,18 @@ class GUI(QtWidgets.QMainWindow):
 
         # Open the tmp directory in the default file manager
         os.system("start " + tmp_dir)
+
+    def cleanup(self) -> None:
+        self.delete_checkboxes()
+        self.base_dir = None
+        self.meta_tags = tuple()
+        # Delete the tmp directory
+        tmp_dir = os.path.join(os.getcwd(), TMP_DIR)
+        if os.path.exists(tmp_dir):
+            shutil.rmtree(tmp_dir)
+
+    def __del__(self):
+        self.cleanup()
+
+    def __exit__(self):
+        self.cleanup()

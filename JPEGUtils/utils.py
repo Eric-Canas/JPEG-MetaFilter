@@ -1,10 +1,6 @@
 import os
 import re
-
-OPENING_META_TAG = b"<x:xmpmeta xmlns:x=\"adobe:ns:meta/\">"
-CLOSE_META_TAG = b"</x:xmpmeta>"
-FIRST_LI_OPEN = b"<rdf:li>"
-FIRST_LI_CLOSE = b"</rdf:li>"
+from UI.config import *
 
 METADATA_TAG_RE = OPENING_META_TAG + b"[\s\S]*" + CLOSE_META_TAG
 TAG_LIST_RE = FIRST_LI_OPEN + b"(.*?)" + FIRST_LI_CLOSE
@@ -18,7 +14,8 @@ def read_all_jpegs_in_dir(dir_path:str, recursive:bool=False) -> tuple:
     for root, dirs, files in os.walk(dir_path):
         for file in files:
             if os.path.isfile(os.path.join(root, file)):
-                if file.lower().endswith(".jpg") or file.lower().endswith(".jpeg"):
+                if any(file.lower().endswith(extension) for extension in ACCEPTED_EXTENSIONS):
+                    jpegs.append(os.path.join(root, file))
                     jpegs.append(os.path.join(root, file))
             elif recursive and os.path.isdir(os.path.join(root, file)):
                 jpegs.extend(read_all_jpegs_in_dir(dir_path=os.path.join(root, file), recursive=recursive))
@@ -56,9 +53,9 @@ def files_containing_tags(paths_and_tags: tuple[tuple[str, tuple[str, ...]]], ta
     """
     Returns a list of paths of files containing all the tags in the given list.
     """
-    if mode.lower() == "all":
-        return tuple(path for path, tags_in_path in paths_and_tags if all(tag is not None and tag in tags_in_path for tag in tags))
-    elif mode.lower() == "any":
-        return tuple(path for path, tags_in_path in paths_and_tags if any(tag is not None and tag in tags_in_path for tag in tags))
-    else:
-        raise ValueError("Invalid mode: {}".format(mode))
+    assert type(mode) == str, "Mode must be a string."
+    mode = mode.lower()
+    assert mode in ("any", "all"), f"Mode must be either 'any' or 'all'. Got {mode}."
+    mode = any if mode == "any" else all
+    return tuple(path for path, tags_in_path in paths_and_tags if tags_in_path is not None
+                 and mode(tag in tags_in_path for tag in tags))
