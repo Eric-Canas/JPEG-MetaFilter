@@ -1,2 +1,5 @@
-# JPEG-MetaTags-Filter
-Simple software that helps to filter imgs in a directory by its meta-data tags
+# JPEG-MetaFilter
+<img src="./UI/JPEG-MetaFilter-logo.png" width="20%" align="left"> **JPEG-MetaFilter** is **portable** software that allows you to filter the JPEGs in your folders by their Meta-Description tags. Meta-Description tags can be added, in _Windows_ through: _Properties_ -> _Details_ -> _Description_ -> _Tags_. Opposite to folders, they can be a good way to classify images that belong to multiple categories, instead of just one. For example: [_Plastic_; _Cilindric_; _Green_; _Sold_]. With **JPEG-MetaFilter** you will be able, for instance, to search for all the image in that folder (and **subfolders**), for all the images of _pieces_ that are either _Green_ or _Plastic_, or just for only those that meet both requirements.
+
+## Installation
+**JPEG-MetaFilter** is offered as a **portable** package with **no dependencies**, compressed in an **exe** file. You can download it <a href="https://drive.google.com/file/d/1U7OVuOPJhgJpTgVOnK00yXu2VNYRr1xJ/view?usp=sharing" target="_blank">here</a>.
