@@ -37,7 +37,7 @@ class GUI(QtWidgets.QMainWindow):
         self.show()
 
     def update_directory(self) -> None:
-        directory = QtWidgets.QFileDialog.getExistingDirectory(self, "Select Directory")
+        directory = QtWidgets.QFileDialog.getExistingDirectory(self, SELECT_FOLDER)
         # Check that the directory exists
         if os.path.exists(directory):
             self.base_dir = directory
@@ -83,7 +83,7 @@ class GUI(QtWidgets.QMainWindow):
 
     def search_button_clicked(self, mode="any") -> None:
         # Build a tmp directory in from the working directory
-        tmp_dir = os.path.join(os.getcwd(), "tmp")
+        tmp_dir = os.path.join(os.getcwd(), TMP_DIR)
         if not os.path.exists(tmp_dir):
             os.mkdir(tmp_dir)
         else:
