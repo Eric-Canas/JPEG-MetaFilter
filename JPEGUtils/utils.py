@@ -29,13 +29,13 @@ def read_all_metadata_tags_in_files(img_paths: list | tuple) -> tuple:
 
     return tags
 
-def read_tags_in_metadata_for_img(img_path:str) -> tuple:
+def read_tags_in_metadata_for_img(img_path:str, lines_to_read = 100) -> tuple:
     """
     Reads all tags in the metadata of a jpeg and returns a list of their paths.
     """
     with open(img_path, "rb") as f:
         # Read all the lines as bytes
-        lines = b"".join(f.readlines())
+        lines = b"".join(f.readline() for _ in range(lines_to_read))
         # Retrieve the metadata part of the file
         metadata = re.findall(METADATA_TAG_RE, lines)
         if len(metadata) == 0: return None

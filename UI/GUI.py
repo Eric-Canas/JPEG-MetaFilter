@@ -4,6 +4,7 @@ import os
 from UI.config import *
 import shutil
 import random
+import sys
 
 class GUI(QtWidgets.QMainWindow):
     def __init__(self):
@@ -11,30 +12,33 @@ class GUI(QtWidgets.QMainWindow):
         self.base_dir = None
         self.meta_tags = tuple()
         self.update_directory()
-        # Show a dialog box
-        self.setWindowTitle(WINDOW_TITLE)
-        self.setGeometry(100, 100, 10, 10)  # Minimal size
-        # Setu the Icon
-        self.setWindowIcon(QtGui.QIcon(LOGO_PATH))
+        if self.base_dir is None:
+            self.close()
+        else:
+            # Show a dialog box
+            self.setWindowTitle(WINDOW_TITLE)
+            self.setGeometry(100, 100, 10, 10)  # Minimal size
+            # Setu the Icon
+            self.setWindowIcon(QtGui.QIcon(LOGO_PATH))
 
-        central_widget = QtWidgets.QWidget(self)
-        self.setCentralWidget(central_widget)
-        self.layout = QtWidgets.QGridLayout()
-        central_widget.setLayout(self.layout)
-        # Create an internal layout for the checkboxes
-        self.search_button_any = QtWidgets.QPushButton(SEARCH_BUTTON_TEXT_ANY)
-        self.search_button_any.clicked.connect(lambda: self.search_button_clicked(mode="any"))
-        self.search_button_all = QtWidgets.QPushButton(SEARCH_BUTTON_TEXT_ALL)
-        self.search_button_all.clicked.connect(lambda: self.search_button_clicked(mode="all"))
-        # Show a label at the top of the window in bold
-        self.label = QtWidgets.QLabel(FILTER_BY_TAGS_BUTTON_TEXT)
-        self.label.setFont(QtGui.QFont("Arial", weight=QtGui.QFont.Bold))
-        self.label.setAlignment(QtCore.Qt.AlignLeft)
-        self.layout.addWidget(self.label, 0, 0)
-        self.checkboxes = {}
-        if self.base_dir is not None:
-            self.show_filter_dialog(images_dir=self.base_dir)
-        self.show()
+            central_widget = QtWidgets.QWidget(self)
+            self.setCentralWidget(central_widget)
+            self.layout = QtWidgets.QGridLayout()
+            central_widget.setLayout(self.layout)
+            # Create an internal layout for the checkboxes
+            self.search_button_any = QtWidgets.QPushButton(SEARCH_BUTTON_TEXT_ANY)
+            self.search_button_any.clicked.connect(lambda: self.search_button_clicked(mode="any"))
+            self.search_button_all = QtWidgets.QPushButton(SEARCH_BUTTON_TEXT_ALL)
+            self.search_button_all.clicked.connect(lambda: self.search_button_clicked(mode="all"))
+            # Show a label at the top of the window in bold
+            self.label = QtWidgets.QLabel(FILTER_BY_TAGS_BUTTON_TEXT)
+            self.label.setFont(QtGui.QFont("Arial", weight=QtGui.QFont.Bold))
+            self.label.setAlignment(QtCore.Qt.AlignLeft)
+            self.layout.addWidget(self.label, 0, 0)
+            self.checkboxes = {}
+            if self.base_dir is not None:
+                self.show_filter_dialog(images_dir=self.base_dir)
+            self.show()
 
     def update_directory(self) -> None:
         directory = QtWidgets.QFileDialog.getExistingDirectory(self, SELECT_FOLDER)
@@ -44,6 +48,7 @@ class GUI(QtWidgets.QMainWindow):
             img_paths = read_all_jpegs_in_dir(dir_path=directory, recursive=True)
             self.meta_tags = read_all_metadata_tags_in_files(img_paths=img_paths)
         else:
+            self.base_dir = None
             self.show_error(INVALID_DIR)
 
     def show_error(self, error: str) -> None:
@@ -64,6 +69,10 @@ class GUI(QtWidgets.QMainWindow):
             self.show_checkboxes()
         else:
             self.show_error(NO_IMAGES_IN_DIR)
+            # Close the window
+            self.close()
+            self.cleanup()
+            sys.exit(0)
 
     def show_checkboxes(self, grid_shape=3) -> None:
         for i, checkbox in enumerate(self.checkboxes.values()):
@@ -100,7 +109,9 @@ class GUI(QtWidgets.QMainWindow):
                 # Append a random number to the file name
                 file_name, file_extension = os.path.splitext(img_path)
                 img_path = file_name + str(random.randint(0, 10000)) + file_extension
+            # Make a copy, making sure that it will have permissions to be deleted later
             shutil.copy(img, img_path)
+            os.chmod(img_path, 0o777)
 
         # Open the tmp directory in the default file manager
         os.system("start " + tmp_dir)
