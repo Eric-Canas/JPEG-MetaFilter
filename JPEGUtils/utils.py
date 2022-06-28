@@ -16,7 +16,6 @@ def read_all_jpegs_in_dir(dir_path:str, recursive:bool=False) -> tuple:
             if os.path.isfile(os.path.join(root, file)):
                 if any(file.lower().endswith(extension) for extension in ACCEPTED_EXTENSIONS):
                     jpegs.append(os.path.join(root, file))
-                    jpegs.append(os.path.join(root, file))
             elif recursive and os.path.isdir(os.path.join(root, file)):
                 jpegs.extend(read_all_jpegs_in_dir(dir_path=os.path.join(root, file), recursive=recursive))
 
