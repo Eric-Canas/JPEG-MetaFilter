@@ -13,7 +13,7 @@
 2. Once you execute **JPEG-MetaFilter.exe** it will ask you to select the **folder** containing the **JPEGs** you want to filter.
 <img align="center" src="./DocsResources/SelectDirectory.png" width=400 alt="Selecting a folder to filter">
 
-3. It will open a window, showing all the **Meta-tags** in the **JPEGs* within the **selected folder**
+3. It will open a window, showing all the **Meta-tags** in the **JPEGs** within the **selected folder**
 <img align="center" src="./DocsResources/Window.png" width=300 alt="Selecting the tags to for the filtering">
 
 4. Once you click on _Search files with [ANY/ALL] of these tags_ it will open a **window** in the **File Explorer** with the results of the filtering.
